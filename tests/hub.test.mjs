@@ -45,3 +45,10 @@ test('점검표: 세 앱 탭과 폼이 짝이 맞고 질문 id가 겹치지 않�
     assert.equal(new Set(ids).size, ids.length);
   }
 });
+
+test('점검표 질문에 학교·학번·점수·실명을 묻는 말이 없다', () => {
+  const js = read('checklist.js');
+  const labels = [...js.matchAll(/label: '([^']+)'/g), ...js.matchAll(/hint: '([^']+)'/g)].map((m) => m[1]);
+  assert.ok(labels.length > 20);
+  for (const l of labels) assert.doesNotMatch(l, /학교|학번|점수|성적|실명|전화|주소/, l);
+});
