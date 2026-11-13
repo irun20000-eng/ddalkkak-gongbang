@@ -52,3 +52,11 @@ test('점검표 질문에 학교·학번·점수·실명을 묻는 말이 없다
   assert.ok(labels.length > 20);
   for (const l of labels) assert.doesNotMatch(l, /학교|학번|점수|성적|실명|전화|주소/, l);
 });
+
+test('서비스 워커: 등록 코드와 캐시 목록의 파일이 있다', () => {
+  for (const page of ['index.html', 'checklist.html']) assert.match(read(page), /serviceWorker\.register\('sw\.js'\)/);
+  const sw = read('sw.js');
+  const files = JSON.parse(sw.match(/const FILES = (\[[\s\S]*?\]);/)[1].replace(/'/g, '"'));
+  for (const f of files) if (f !== './') assert.ok(existsSync(new URL('../' + f, import.meta.url)), f);
+  assert.match(sw, /startsWith\('ddalkkak-gongbang-'\)/);
+});
